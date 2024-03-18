@@ -2,7 +2,7 @@ import unittest
 
 from bitarray import bitarray
 
-from src.dpd import DPD
+from utils.dpd import DPD
 
 
 class TestDPD(unittest.TestCase):

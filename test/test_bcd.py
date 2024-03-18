@@ -1,6 +1,6 @@
 import unittest
 
-from src.bcd import *
+from utils.bcd import *
 
 class TestBCD(unittest.TestCase):
 

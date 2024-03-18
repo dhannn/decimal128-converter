@@ -1,6 +1,6 @@
 from bitarray import bitarray
 
-from bcd import BCD
+from utils.bcd import BCD
 
 class DPD:
     
