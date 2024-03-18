@@ -1,11 +1,17 @@
 from bitarray import bitarray
+from enum import Enum
 
+class RoundingMethod(Enum):
+    ROUND_UP = 0
+    ROUND_DOWN = 1
+    ROUND_TNE = 3
 
 class DecimalFloatingPoint:
-
+    
     BIAS: int = 6176
 
     original_value: float
+    rounding_method: RoundingMethod
     __exponent_representation: int                      # this is with bias
     __sign: str                                         # only '+' or '-'
     __combination_field: bitarray                       # should be five bits
@@ -24,7 +30,7 @@ class DecimalFloatingPoint:
 
     Decimal value is all the parts combined in one bitarray
     """
-    def __init__(self, value: str | float | int):
+    def __init__(self, value: str | float | int, rounding_method):
         pass
 
 
@@ -67,7 +73,12 @@ class DecimalFloatingPoint:
 
     """ TODO: Override the string function
 
-    Should return the human-readable string version of the  decimal value.
+    Should return the human-readable string version of the decimal value (put 
+    spaces between components, i.e. sign field, combination field, exponent 
+    continuation,...)
     """
     def __str__(self) -> str:
+        pass
+
+    def to_hex(self) -> str:
         pass
