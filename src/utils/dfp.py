@@ -55,10 +55,7 @@ class DecimalFloatingPoint:
     
     """ TODO: Implement the __get_coefficient_continuation_field
 
-    Same as the exponent continuation but returns a list of bitarrays
-    representing each triplet of the few least significant digits of 
-    the mantissa/significand (in densely-packed)
-    """
+s    """
     def __get_coefficient_continuation_field(self, significand) -> list[bitarray]:
         pass
 
@@ -80,5 +77,7 @@ class DecimalFloatingPoint:
     def __str__(self) -> str:
         pass
 
+    """ TODO: 
+    """
     def to_hex(self) -> str:
         pass

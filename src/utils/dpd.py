@@ -34,7 +34,7 @@ class DPD:
         print(aei)
         print(self.output_mapping[aei](bit_components))
         
-        
+        # TODO: Finish the implementation
         output_bits = bitarray(12)
 
     @staticmethod
