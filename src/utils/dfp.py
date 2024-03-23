@@ -52,7 +52,7 @@ class DecimalFloatingPoint:
                 elif rounding_method == RoundingMethod.ROUND_TNE:
                     significand = self.__round_off(RoundingMethod.ROUND_TNE, significand)
             
-        # If number of digits is less than 34, pad zeroes to the left
+        # If number of digits is less than 34
         elif total_digits < 34:
             digits_to_move = 0
             while total_digits < 34:
@@ -60,10 +60,9 @@ class DecimalFloatingPoint:
                 exponent -= 1
                 total_digits += 1
                 digits_to_move += 1
-            significand_str = str(abs(significand))
-            significand_str = significand_str.zfill(34)
             significand = int(significand_str)
-            
+
+        # If number of digits is 34
         elif total_digits == 34:
             digits_to_move = total_digits - 34          # Determine number of digits to move
             significand *= 10 ** digits_to_move         # Move decimal point
