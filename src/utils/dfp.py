@@ -73,10 +73,15 @@ class DecimalFloatingPoint:
                     num_frac =  len(significand) - index_decimal_point          # Number of digits to the right of decimal point
                 else:
                     num_digits = len(significand) - 1
-                    num_whole = index_decimal_point
+                    num_whole = index_decimal_point                             # Number of digits to the left of decimal point
                     num_frac = index_decimal_point - len(significand - 1)       # Number of digits to the right of decimal point
                 
+                # If rounding off is needed
                 if num_digits > 34:
+                    # Determine whether we need to shift the decimal point left or right
+                    if num_whole > 34:      # Shift decimal point to the left
+                    elif num_whole < 34:    # Shift decimal point to the right
+                    
                     for i in range(len(significand)):
                         digit = significand[i]
 
