@@ -129,13 +129,12 @@ class DecimalFloatingPoint:
         # Store significand by 3 digits in an array
         coefficient_continuation_field = [int(significand_str[i:i+3]) for i in range(0, len(significand_str), 3)]
         dpd_representation = []
-        
+
         for val in coefficient_continuation_field:
             dpd_obj = DPD(str(val))
             dpd_representation.append(dpd_obj.densely_packed)
 
         return dpd_representation
-        pass
 
 
     """ TODO: Implement __round_off
