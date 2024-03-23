@@ -81,14 +81,16 @@ class DecimalFloatingPoint:
         self.__coefficient_continuation_field = self.__get_coefficient_continuation_field(significand)
 
 
-    def __get_msb_representation(self):
-        msb = int(str(self.significand)[0])
-        msb_dpd = DPD(msb)
+    def __get_msd_representation(self):
+        msd = int(str(self.significand)[0])
+        msd_dpd = DPD(msd)
         
-        return msb_dpd
+        return msd_dpd
     
     def __get_exponent_representation(self, exponent):
-        self.__exponent_representation = exponent + self.BIAS
+        self.__exponent_representation = bitarray(bin(exponent + self.BIAS)[2:])
+
+        return exponent + self.BIAS
 
     """ TODO: Implement the __get_combination_field
 
@@ -97,18 +99,16 @@ class DecimalFloatingPoint:
     containing the combination field
     """ 
     def __get_combination_field(self, significand: float, exponent: int) -> bitarray:
-        bit_array = bitarray('00000')
-        msd = 0     # Most significant digit
-        msd_bits = bitarray('0000')
-
-        total_digits = sum(1 for char in str(abs(significand)) if char.isdigit())
-        if total_digits < 34:                       # if zeroes need to be padded
-            significand_str = str(abs(significand))
-            significand_str = significand_str.zfill(34)
-            msd = int(significand_str[0])           # get most significant digit
-            msd_bits = bitarray(format(msd, '04b')) # store msd in binary
-        pass
-
+        msd = self.__get_msd_representation().densely_packed
+        exp_representation = self.__get_exponent_representation(exponent)
+        
+        if msd[0] == 0:
+            combination_field = bitarray(
+                f'{exp_representation[0]}{exp_representation[1]}0{msd[1]}{msd[2]}{msd[3]}')
+        elif msd[0] == 1 and msd[1] == 1:
+            combination_field = bitarray(f'11{exp_representation[0]}{exp_representation[1]}100{msd[3]}')
+        
+        return combination_field
 
     """ TODO: Implement the __get_exponent_combination_field
 
