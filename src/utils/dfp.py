@@ -118,7 +118,9 @@ class DecimalFloatingPoint:
     a bitarray representing the exponent continuation field
     """
     def __get_exponent_continuation_field(self, exponent) -> bitarray:
-        pass
+        exp_representation = self.__get_exponent_representation(exponent)
+        last_12_bits = exp_representation[-12:]     # Get last 12 bits
+        return bitarray(last_12_bits)
     
     
     """ TODO: Implement the __get_coefficient_continuation_field
