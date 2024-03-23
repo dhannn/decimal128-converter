@@ -37,6 +37,7 @@ class DecimalFloatingPoint:
         # Normalizing the significand to 34 digits
         # Counting significand's number of digits, excluding sign and decimal point
         total_digits = sum(1 for char in str(abs(significand)) if char.isdigit())
+        total_digits = sum(1 for char in str(abs(significand)) if char.isdigit())
         # If significand has more than 34 digits, move the decimal place after the 34th digit
         if total_digits > 34:
             digits_to_move = total_digits - 34          # Determine number of digits to move
@@ -45,24 +46,16 @@ class DecimalFloatingPoint:
 
             significand_str = str(abs(significand))
             decimal_index = significand_str.find('.')   # Find the index of the decimal point
-            if decimal_index != -1:                     # If decimal point exists
-                digits_after_decimal = significand_str[decimal_index + 1:]
-                num_digits_after_decimal = len(significand_str) - decimal_index - 1
-                # Determine rounding method
-                rounding_base = 10 ** num_digits_after_decimal
-                half_rounding_base = rounding_base // 2
-                
-                if int(digits_after_decimal) > half_rounding_base:
-                    self.rounding_method = RoundingMethod.ROUND_UP
+            if decimal_index != -1:                     # If decimal point exists                
+                if rounding_method == RoundingMethod.ROUND_UP:
                     significand = self.__round_off(RoundingMethod.ROUND_UP, significand)
-                elif int(digits_after_decimal) < half_rounding_base:
+                elif rounding_method == RoundingMethod.ROUND_DOWN:
                     self.rounding_method = RoundingMethod.ROUND_DOWN
                     significand = self.__round_off(RoundingMethod.ROUND_DOWN, significand)
-                else:
-                    self.rounding_method = RoundingMethod.ROUND_TNE
+                elif rounding_method == RoundingMethod.ROUND_TNE:
                     significand = self.__round_off(RoundingMethod.ROUND_TNE, significand)
             
-        # If number of digits is less than 34, pad zeroes to the left
+        # If number of digits is less than 34
         elif total_digits < 34:
             digits_to_move = 0
             while total_digits < 34:
@@ -70,10 +63,9 @@ class DecimalFloatingPoint:
                 exponent -= 1
                 total_digits += 1
                 digits_to_move += 1
-            significand_str = str(abs(significand))
-            significand_str = significand_str.zfill(34)
             significand = int(significand_str)
-            
+
+        # If number of digits is 34
         elif total_digits == 34:
             digits_to_move = total_digits - 34          # Determine number of digits to move
             significand *= 10 ** digits_to_move         # Move decimal point
@@ -81,7 +73,6 @@ class DecimalFloatingPoint:
         
         # Setting the sign
         self.__sign = '+' if self.original_value >= 0 else '-'
-
         # Setting the combination field
         self.__combination_field = self.__get_combination_field(significand, exponent)
         # Setting the exponent continuation field
@@ -106,6 +97,16 @@ class DecimalFloatingPoint:
     containing the combination field
     """ 
     def __get_combination_field(self, significand: float, exponent: int) -> bitarray:
+        bit_array = bitarray('00000')
+        msd = 0     # Most significant digit
+        msd_bits = bitarray('0000')
+
+        total_digits = sum(1 for char in str(abs(significand)) if char.isdigit())
+        if total_digits < 34:                       # if zeroes need to be padded
+            significand_str = str(abs(significand))
+            significand_str = significand_str.zfill(34)
+            msd = int(significand_str[0])           # get most significant digit
+            msd_bits = bitarray(format(msd, '04b')) # store msd in binary
         pass
 
 
@@ -130,11 +131,10 @@ class DecimalFloatingPoint:
     Given a float value, perform the appropriate rounding method such that it reaches 34 values
     """
     def __round_off(self, rounding_method, val) -> float:
-        final_val = 0
         val_str = str(val)
         digits_to_keep = min(len(val_str), 34)  
-        last_digits = val_str[-digits_to_keep:]
-        last_digits_int = int(last_digits)
+        # last_digits = val_str[-digits_to_keep:]
+        # last_digits_int = int(last_digits)
         keep_digits_int = int(val)
 
         if rounding_method == RoundingMethod.ROUND_UP:
