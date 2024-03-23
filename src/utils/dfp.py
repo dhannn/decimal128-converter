@@ -46,19 +46,14 @@ class DecimalFloatingPoint:
             if decimal_index != -1:                     # If decimal point exists
                 digits_after_decimal = significand_str[decimal_index + 1:]
                 num_digits_after_decimal = len(significand_str) - decimal_index - 1
-                # Determine rounding method
-                rounding_base = 10 ** num_digits_after_decimal
-                half_rounding_base = rounding_base // 2
                 
-                if int(digits_after_decimal) > half_rounding_base:
-                    self.rounding_method = ROUND_UP
-                    significand = self.__round_off(ROUND_UP, significand)
-                elif int(digits_after_decimal) < half_rounding_base:
-                    self.rounding_method = ROUND_DOWN
-                    significand = self.__round_off(ROUND_DOWN, significand)
-                else:
-                    self.rounding_method = ROUND_TNE
-                    significand = self.__round_off( ROUND_TNE, significand)
+                if rounding_method == RoundingMethod.ROUND_UP:
+                    significand = self.__round_off(RoundingMethod.ROUND_UP, significand)
+                elif rounding_method == RoundingMethod.ROUND_DOWN:
+                    self.rounding_method = RoundingMethod.ROUND_DOWN
+                    significand = self.__round_off(RoundingMethod.ROUND_DOWN, significand)
+                elif rounding_method == RoundingMethod.ROUND_TNE:
+                    significand = self.__round_off(RoundingMethod.ROUND_TNE, significand)
             
         # If number of digits is less than 34, pad zeroes to the left
         elif total_digits < 34:
@@ -134,11 +129,11 @@ class DecimalFloatingPoint:
         last_digits_int = int(last_digits)
         keep_digits_int = int(val)
 
-        if rounding_method == ROUND_UP:
+        if rounding_method == RoundingMethod.ROUND_UP:
             return val + 1
-        elif rounding_method == ROUND_DOWN:
+        elif rounding_method == RoundingMethod.ROUND_DOWN:
             return val
-        elif rounding_method == ROUND_TNE:
+        elif rounding_method == RoundingMethod.ROUND_TNE:
             if keep_digits_int % 2 == 1:        # if odd
                 return val + 1
             else:                               # if even
