@@ -37,41 +37,7 @@ class DecimalFloatingPoint:
     """
     def __init__(self, significand: float, exponent: int, rounding_method):
 
-        # Normalizing the significand to 34 digits
-        # Counting significand's number of digits, excluding sign and decimal point
-        total_digits = sum(1 for char in significand if char.isdigit())
-        # If significand has more than 34 digits, move the decimal place after the 34th digit
-        significand_str = significand
-        if total_digits > 34:
-            digits_to_move = total_digits - 34          # Determine number of digits to move
-            significand *= 10 ** digits_to_move         # Move decimal point
-            exponent -= digits_to_move                  # Update exponent
-
-            decimal_index = significand_str.find('.')   # Find the index of the decimal point
-            if decimal_index != -1:                     # If decimal point exists                
-                if rounding_method == RoundingMethod.ROUND_UP:
-                    significand = self.__round_off(RoundingMethod.ROUND_UP, significand)
-                elif rounding_method == RoundingMethod.ROUND_DOWN:
-                    self.rounding_method = RoundingMethod.ROUND_DOWN
-                    significand = self.__round_off(RoundingMethod.ROUND_DOWN, significand)
-                elif rounding_method == RoundingMethod.ROUND_TNE:
-                    significand = self.__round_off(RoundingMethod.ROUND_TNE, significand)
-            
-        # If number of digits is less than 34
-        elif total_digits < 34:
-            digits_to_move = 0
-            while total_digits < 34:
-                significand *= 10
-                exponent -= 1
-                total_digits += 1
-                digits_to_move += 1
-            significand = int(float(significand_str))
-
-        # If number of digits is 34
-        elif total_digits == 34:
-            digits_to_move = total_digits - 34          # Determine number of digits to move
-            significand *= 10 ** digits_to_move         # Move decimal point
-            exponent -= digits_to_move
+        self.significand, self.exponent = normalize_significand(significand, exponent)
         
         self.significand = significand
         self.exponent = int(exponent)
@@ -107,6 +73,9 @@ class DecimalFloatingPoint:
 
             significand = parts[0].zfill(34)
             return significand, exponent
+
+        def round_off(significand, exponent, rounding_method):
+            pass
                 
 
     def __get_msd_representation(self, significand):
