@@ -1,10 +1,9 @@
 from PyQt6.QtCore import Qt
 from PyQt6.QtWidgets import QWidget
-from PyQt6.QtWidgets import QApplication, QLabel, QWidget, QGridLayout, QLineEdit, QHBoxLayout, QComboBox, QPushButton, QMessageBox, QPlainTextEdit
+from PyQt6.QtWidgets import QLabel,QWidget, QGridLayout, QLineEdit,\
+    QHBoxLayout, QComboBox, QPushButton, QPlainTextEdit
 
 from src.utils.dfp import RoundingMethod
-
-# from src.app.controller import Controller
 
 class View(QWidget):
 
@@ -18,9 +17,6 @@ class View(QWidget):
     convert_button: QPushButton
     save_button: QPushButton
     layout: QGridLayout
-
-    # def __init__(self, parent: QWidget | None = ..., flags: Qt.WindowType = ...) -> None:
-    #     super().__init__(parent, flags)
 
     def __init__(self):
         super().__init__()
@@ -120,7 +116,7 @@ class View(QWidget):
         base = self.base10_base.text()
         exp = self.base10_exp.text()
 
-        return rounding_option, base, exp
+        return rounding_option, float(base), float(exp)
 
     def set_outputs(self, dfp_bin, dfp_hex):
         self.output_binary.setPlainText(dfp_bin)
