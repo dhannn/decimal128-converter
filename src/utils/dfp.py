@@ -1,6 +1,8 @@
 from bitarray import bitarray
 from enum import Enum
 
+from utils.dpd import DPD
+
 class RoundingMethod(Enum):
     ROUND_UP = 0
     ROUND_DOWN = 1
@@ -34,7 +36,7 @@ class DecimalFloatingPoint:
     def __init__(self, significand: float, exponent: int, rounding_method):
         # Normalizing the significand to 34 digits
         # Counting significand's number of digits, excluding sign and decimal point
-        total_digits = sum(1 for char in str(abs(number)) if char.isdigit())
+        total_digits = sum(1 for char in str(abs(significand)) if char.isdigit())
         # If significand has more than 34 digits, move the decimal place after the 34th digit
         if total_digits > 34:
             digits_to_move = total_digits - 34          # Determine number of digits to move
@@ -51,14 +53,14 @@ class DecimalFloatingPoint:
                 half_rounding_base = rounding_base // 2
                 
                 if int(digits_after_decimal) > half_rounding_base:
-                    self.rounding_method = ROUND_UP
-                    significand = self.__round_off(ROUND_UP, significand)
+                    self.rounding_method = RoundingMethod.ROUND_UP
+                    significand = self.__round_off(RoundingMethod.ROUND_UP, significand)
                 elif int(digits_after_decimal) < half_rounding_base:
-                    self.rounding_method = ROUND_DOWN
-                    significand = self.__round_off(ROUND_DOWN, significand)
+                    self.rounding_method = RoundingMethod.ROUND_DOWN
+                    significand = self.__round_off(RoundingMethod.ROUND_DOWN, significand)
                 else:
-                    self.rounding_method = ROUND_TNE
-                    significand = self.__round_off( ROUND_TNE, significand)
+                    self.rounding_method = RoundingMethod.ROUND_TNE
+                    significand = self.__round_off(RoundingMethod.ROUND_TNE, significand)
             
         # If number of digits is less than 34, pad zeroes to the left
         elif total_digits < 34:
@@ -87,6 +89,16 @@ class DecimalFloatingPoint:
         # Setting the coefficient continuation field 
         self.__coefficient_continuation_field = self.__get_coefficient_continuation_field(significand)
 
+
+    def __get_msb_representation(self):
+        msb = int(str(self.significand)[0])
+        msb_dpd = DPD(msb)
+        
+        return msb_dpd
+    
+    def __get_exponent_representation(self, exponent):
+        self.__exponent_representation = exponent + self.BIAS
+
     """ TODO: Implement the __get_combination_field
 
     Should take in the significand and exponent (in normal base-10
@@ -94,7 +106,6 @@ class DecimalFloatingPoint:
     containing the combination field
     """ 
     def __get_combination_field(self, significand: float, exponent: int) -> bitarray:
-
         pass
 
 
@@ -126,11 +137,11 @@ class DecimalFloatingPoint:
         last_digits_int = int(last_digits)
         keep_digits_int = int(val)
 
-        if rounding_method == ROUND_UP:
+        if rounding_method == RoundingMethod.ROUND_UP:
             return val + 1
-        elif rounding_method == ROUND_DOWN:
+        elif rounding_method == RoundingMethod.ROUND_DOWN:
             return val
-        elif rounding_method == ROUND_TNE:
+        elif rounding_method == RoundingMethod.ROUND_TNE:
             if keep_digits_int % 2 == 1:        # if odd
                 return val + 1
             else:                               # if even
