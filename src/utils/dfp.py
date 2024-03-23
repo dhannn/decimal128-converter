@@ -1,5 +1,7 @@
 from bitarray import bitarray
 from enum import Enum
+from src.utils.bcd import BCD
+from src.utils.dpd import DPD 
 
 from utils.dpd import DPD
 
@@ -123,7 +125,16 @@ class DecimalFloatingPoint:
 
     """
     def __get_coefficient_continuation_field(self, significand) -> list[bitarray]:
-        pass
+        significand_str = str(significand).zfill(33)  # Pad zeroes to the left until 33 digits
+        # Store significand by 3 digits in an array
+        coefficient_continuation_field = [int(significand_str[i:i+3]) for i in range(0, len(significand_str), 3)]
+        dpd_representation = []
+
+        for val in coefficient_continuation_field:
+            dpd_obj = DPD(str(val))
+            dpd_representation.append(dpd_obj.densely_packed)
+
+        return dpd_representation
 
 
     """ TODO: Implement __round_off
