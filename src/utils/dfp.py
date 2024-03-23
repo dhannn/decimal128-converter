@@ -35,7 +35,7 @@ class DecimalFloatingPoint:
 
     Decimal value is all the parts combined in one bitarray
     """
-    def __init__(self, significand: float, exponent: int, rounding_method):
+    def __init__(self, significand: str, exponent: str, rounding_method):
 
         def normalize_significand(significand: str, exponent):
 
@@ -79,6 +79,13 @@ class DecimalFloatingPoint:
                 else:                               # if even
                     return integer_part
 
+        if significand[0] == '-':
+            significand = significand[1:]
+            self.__sign = 1
+        else:
+            self.__sign = 0
+
+
         self.significand, self.exponent = normalize_significand(significand, exponent)
         
         self.significand
@@ -86,7 +93,6 @@ class DecimalFloatingPoint:
         self.rounding_method = rounding_method
         
         # Setting the sign
-        self.__sign = 0 if int(self.significand) >= 0 else 1
         # Setting the combination field
         self.__combination_field = self.__get_combination_field(self.significand, exponent)
         # Setting the exponent continuation field
