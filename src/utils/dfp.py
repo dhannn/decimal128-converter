@@ -191,4 +191,5 @@ class DecimalFloatingPoint:
     """ TODO: 
     """
     def to_hex(self) -> str:
-        pass
+        hex_string = self.decimal_value.tobytes().hex()
+        return hex_string
