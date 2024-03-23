@@ -2,8 +2,8 @@ from bitarray import bitarray
 from enum import Enum
 from src.utils.bcd import BCD
 from src.utils.dpd import DPD 
+from decimal import Decimal
 
-from src.utils.dpd import DPD
 
 class RoundingMethod(Enum):
     ROUND_UP = 0
@@ -61,8 +61,23 @@ class DecimalFloatingPoint:
             significand = parts[0].zfill(34)
             return significand, exponent
 
-        def round_off(significand, exponent, rounding_method):
-            pass
+        # assume significand is a string where integer part is already 34 digits and decimal point is appropriately set
+        def round_off(significand, rounding_method) -> str:
+            parts = significand.split('.')
+            # Store digits to the left of the decimal point in a decimal object
+            integer_part = Decimal(parts[0])
+            # Store digits to the right of the decimal point in a decimal object
+            fractional_part = Decimal(parts[1])
+
+            if rounding_method == RoundingMethod.ROUND_UP:
+                return integer_part + 1
+            elif rounding_method == RoundingMethod.ROUND_DOWN:
+                return integer_part
+            elif rounding_method == RoundingMethod.ROUND_TNE:
+                if fractional_part % 2 == 1:        # if odd
+                    return integer_part + 1
+                else:                               # if even
+                    return integer_part
 
         self.significand, self.exponent = normalize_significand(significand, exponent)
         
@@ -147,28 +162,6 @@ class DecimalFloatingPoint:
             dpd_representation.append(dpd_obj.densely_packed)
 
         return dpd_representation
-
-
-    """ TODO: Implement __round_off
-
-    Given a float value, perform the appropriate rounding method such that it reaches 34 values
-    """
-    def __round_off(self, rounding_method, val) -> float:
-        val_str = str(val)
-        digits_to_keep = min(len(val_str), 34)  
-        # last_digits = val_str[-digits_to_keep:]
-        # last_digits_int = int(last_digits)
-        keep_digits_int = int(val)
-
-        if rounding_method == RoundingMethod.ROUND_UP:
-            return val + 1
-        elif rounding_method == RoundingMethod.ROUND_DOWN:
-            return val
-        elif rounding_method == RoundingMethod.ROUND_TNE:
-            if keep_digits_int % 2 == 1:        # if odd
-                return val + 1
-            else:                               # if even
-                return val
 
     
     """ TODO: Override the equality function
