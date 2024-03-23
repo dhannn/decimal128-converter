@@ -3,7 +3,7 @@ from enum import Enum
 from src.utils.bcd import BCD
 from src.utils.dpd import DPD 
 
-from utils.dpd import DPD
+from src.utils.dpd import DPD
 
 class RoundingMethod(Enum):
     ROUND_UP = 0
@@ -41,12 +41,12 @@ class DecimalFloatingPoint:
         total_digits = sum(1 for char in str(abs(significand)) if char.isdigit())
         total_digits = sum(1 for char in str(abs(significand)) if char.isdigit())
         # If significand has more than 34 digits, move the decimal place after the 34th digit
+        significand_str = str(abs(significand))
         if total_digits > 34:
             digits_to_move = total_digits - 34          # Determine number of digits to move
             significand *= 10 ** digits_to_move         # Move decimal point
             exponent -= digits_to_move                  # Update exponent
 
-            significand_str = str(abs(significand))
             decimal_index = significand_str.find('.')   # Find the index of the decimal point
             if decimal_index != -1:                     # If decimal point exists                
                 if rounding_method == RoundingMethod.ROUND_UP:
@@ -65,7 +65,7 @@ class DecimalFloatingPoint:
                 exponent -= 1
                 total_digits += 1
                 digits_to_move += 1
-            significand = int(significand_str)
+            significand = int(float(significand_str))
 
         # If number of digits is 34
         elif total_digits == 34:
@@ -73,8 +73,12 @@ class DecimalFloatingPoint:
             significand *= 10 ** digits_to_move         # Move decimal point
             exponent -= digits_to_move      
         
+        self.significand = significand
+        self.exponent = int(exponent)
+        self.rounding_method = rounding_method
+
         # Setting the sign
-        self.__sign = '+' if self.original_value >= 0 else '-'
+        self.__sign = 0 if self.significand >= 0 else 1
         # Setting the combination field
         self.__combination_field = self.__get_combination_field(significand, exponent)
         # Setting the exponent continuation field
@@ -90,9 +94,9 @@ class DecimalFloatingPoint:
         return msd_dpd
     
     def __get_exponent_representation(self, exponent):
-        self.__exponent_representation = bitarray(bin(exponent + self.BIAS)[2:])
+        self.__exponent_representation = bitarray(bin(int(exponent) + self.BIAS)[2:])
 
-        return exponent + self.BIAS
+        return bitarray(bin(int(exponent) + self.BIAS)[2:])
 
     """ TODO: Implement the __get_combination_field
 
@@ -101,7 +105,7 @@ class DecimalFloatingPoint:
     containing the combination field
     """ 
     def __get_combination_field(self, significand: float, exponent: int) -> bitarray:
-        msd = self.__get_msd_representation().densely_packed
+        msd = self.__get_msd_representation().decimal_value
         exp_representation = self.__get_exponent_representation(exponent)
         
         if msd[0] == 0:
@@ -184,7 +188,7 @@ class DecimalFloatingPoint:
     continuation,...)
     """
     def __str__(self) -> str:
-        formatted = ' '.join(self.__coefficient_continuation_field)
+        formatted = ' '.join([str(x) for x in self.__coefficient_continuation_field])
         return f'{self.decimal_value[0]} {self.decimal_value[1:6]} {self.decimal_value[6:13]} { formatted }'
 
 

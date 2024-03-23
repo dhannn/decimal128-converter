@@ -38,7 +38,8 @@ class Model:
         self.roundingOption = roundingOption
 
     def convert_to_decimal(self) -> DecimalFloatingPoint:
-        return MockDecimalFloatingPoint().set_vars(self.significand, self.exponent)
+        return DecimalFloatingPoint(self.significand, self.exponent, self.roundingOption)
+        # return MockDecimalFloatingPoint().set_vars(self.significand, self.exponent)
     
     def save_to_text_file(self) -> None:
         dfp: DecimalFloatingPoint
