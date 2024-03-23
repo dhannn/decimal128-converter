@@ -49,29 +49,3 @@ class Model:
 
         with open(f'Decimal128_{ dfp.significand }e{ dfp.exponent }.txt', 'w') as file:
             file.write(f'Base-10:\t\t{ dfp.significand }e{ dfp.exponent }\nDecimal128:\t\t{bin_dfp} (binary)\n\t\t\t\t{hex_dfp} (hex)')
-
-""" TODO: Implement conversion to decimal
-
-Should take a float value (precondition is any string version is type
-casted by the controller class), convert it by using the DecimalFloatingPoint
-class and return the object
-
-Should raise a NaNException when not a number
-"""
-def convert_to_decimal(value: float, method: RoundingMethod) -> DecimalFloatingPoint:
-    return MockDecimalFloatingPoint()
-
-""" TODO: Implement saving to text file functionality
-
-Should take the user input and the output, and save it 
-
-Follow the following format
-Base-10 value:              [original_value]
-Decimal128 representation:  [str(decimal)] 
-                            [decimal.to_hex()]
-"""
-def save_to_text_file(
-        original_value: float, 
-        decimal: DecimalFloatingPoint, 
-        ) -> None:
-    pass
