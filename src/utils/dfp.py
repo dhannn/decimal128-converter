@@ -206,8 +206,14 @@ class DecimalFloatingPoint:
     """
     def to_hex(self) -> str:
         hex_string = self.decimal_value.tobytes().hex()
-        return hex_string
     
-
 class NaNDecimalFloatingPoint(DecimalFloatingPoint):
-    pass
+    def __init__(self):
+        self.__sign = 0  # dont care
+        self.__combination_field = '11111'
+        self.__exponent_continuation_field = '0000_0100_0000_0101' # dont care
+
+        bit_array = bitarray('0010000000')
+        coefficient_continuation_field = [bit_array.copy() for _ in range(10)]
+        coefficient_continuation_field = tuple(coefficient_continuation_field)
+        self.__coefficient_continuation_field = coefficient_continuation_field
