@@ -21,7 +21,7 @@ class DPD:
         '111': lambda x: bitarray([0, 0, x['d'], 1, 1, x['h'], 1, 1, 1, x['l']])
     }
 
-    def __init__(self, val: int | str):
+    def __init__(self, val: str):
         bcd_value = BCD(val)
         self.original_value = val
 
