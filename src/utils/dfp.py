@@ -93,6 +93,7 @@ class DecimalFloatingPoint:
         return msd_dpd
     
     def __get_exponent_representation(self, exponent):
+
         self.__exponent_representation = bitarray(bin(int(exponent) + self.BIAS)[2:])
 
         return bitarray(bin(int(exponent) + self.BIAS)[2:])
@@ -104,6 +105,9 @@ class DecimalFloatingPoint:
     containing the combination field
     """ 
     def __get_combination_field(self, significand: float, exponent: int) -> bitarray:
+        if exponent >= 6612:
+            return bitarray('11110')
+
         msd = self.__get_msd_representation().decimal_value
         exp_representation = self.__get_exponent_representation(exponent)
         
