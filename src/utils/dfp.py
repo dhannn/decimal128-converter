@@ -79,7 +79,6 @@ class DecimalFloatingPoint:
         
         # Setting the sign
         self.__sign = '+' if self.original_value >= 0 else '-'
-
         # Setting the combination field
         self.__combination_field = self.__get_combination_field(significand, exponent)
         # Setting the exponent continuation field
@@ -94,7 +93,16 @@ class DecimalFloatingPoint:
     containing the combination field
     """ 
     def __get_combination_field(self, significand: float, exponent: int) -> bitarray:
+        bit_array = bitarray('00000')
+        msd = 0     # Most significant digit
+        msd_bits = bitarray('0000')
 
+        total_digits = sum(1 for char in str(abs(number)) if char.isdigit())
+        if total_digits < 34:               # if zeroes need to be padded
+            significand_str = str(abs(significand))
+            significand_str = significand_str.zfill(34)
+            msd = int(significand_str[0])           # get most significant digit
+            msd_bits = bitarray(format(msd, '04b')) # store msd in binary
         pass
 
 
