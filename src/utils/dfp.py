@@ -43,10 +43,7 @@ class DecimalFloatingPoint:
 
             significand_str = str(abs(significand))
             decimal_index = significand_str.find('.')   # Find the index of the decimal point
-            if decimal_index != -1:                     # If decimal point exists
-                digits_after_decimal = significand_str[decimal_index + 1:]
-                num_digits_after_decimal = len(significand_str) - decimal_index - 1
-                
+            if decimal_index != -1:                     # If decimal point exists                
                 if rounding_method == RoundingMethod.ROUND_UP:
                     significand = self.__round_off(RoundingMethod.ROUND_UP, significand)
                 elif rounding_method == RoundingMethod.ROUND_DOWN:
@@ -122,11 +119,10 @@ class DecimalFloatingPoint:
     Given a float value, perform the appropriate rounding method such that it reaches 34 values
     """
     def __round_off(self, rounding_method, val) -> float:
-        final_val = 0
         val_str = str(val)
         digits_to_keep = min(len(val_str), 34)  
-        last_digits = val_str[-digits_to_keep:]
-        last_digits_int = int(last_digits)
+        # last_digits = val_str[-digits_to_keep:]
+        # last_digits_int = int(last_digits)
         keep_digits_int = int(val)
 
         if rounding_method == RoundingMethod.ROUND_UP:
