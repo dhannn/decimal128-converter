@@ -116,7 +116,7 @@ class View(QWidget):
         base = self.base10_base.text()
         exp = self.base10_exp.text()
 
-        return rounding_option, float(base), float(exp)
+        return rounding_option, base, exp
 
     def set_outputs(self, dfp_bin, dfp_hex):
         self.output_binary.setPlainText(dfp_bin)

@@ -32,14 +32,14 @@ class Model:
     exponent: int
     roundingOption: RoundingMethod
     
-    def set_vars(self, signifcand: float, exponent: int, roundingOption: RoundingMethod):
+    def set_vars(self, signifcand: str, exponent: str, roundingOption: RoundingMethod):
         self.significand = signifcand
         self.exponent = exponent
         self.roundingOption = roundingOption
 
     def convert_to_decimal(self) -> DecimalFloatingPoint:
-        if math.isnan(self.exponent) or math.isnan(self.significand == float('NaN')):
-            return NaNDecimalFloatingPoint()
+        # if math.isnan(self.exponent) or math.isnan(self.significand == float('NaN')):
+        #     return NaNDecimalFloatingPoint()
 
         return DecimalFloatingPoint(self.significand, self.exponent, self.roundingOption)
         # return MockDecimalFloatingPoint().set_vars(self.significand, self.exponent)

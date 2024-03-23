@@ -36,12 +36,12 @@ class DecimalFloatingPoint:
     Decimal value is all the parts combined in one bitarray
     """
     def __init__(self, significand: float, exponent: int, rounding_method):
+
         # Normalizing the significand to 34 digits
         # Counting significand's number of digits, excluding sign and decimal point
-        total_digits = sum(1 for char in str(abs(significand)) if char.isdigit())
-        total_digits = sum(1 for char in str(abs(significand)) if char.isdigit())
+        total_digits = sum(1 for char in significand if char.isdigit())
         # If significand has more than 34 digits, move the decimal place after the 34th digit
-        significand_str = str(abs(significand))
+        significand_str = significand
         if total_digits > 34:
             digits_to_move = total_digits - 34          # Determine number of digits to move
             significand *= 10 ** digits_to_move         # Move decimal point
@@ -71,12 +71,12 @@ class DecimalFloatingPoint:
         elif total_digits == 34:
             digits_to_move = total_digits - 34          # Determine number of digits to move
             significand *= 10 ** digits_to_move         # Move decimal point
-            exponent -= digits_to_move      
+            exponent -= digits_to_move
         
         self.significand = significand
         self.exponent = int(exponent)
         self.rounding_method = rounding_method
-
+        
         # Setting the sign
         self.__sign = 0 if self.significand >= 0 else 1
         # Setting the combination field
@@ -88,19 +88,40 @@ class DecimalFloatingPoint:
 
         tmp = ''.join([x.to01() for x in self.__coefficient_continuation_field])
         self.decimal_value = bitarray(f'{self.__sign}{self.__combination_field.to01()}{self.__exponent_continuation_field.to01()}{tmp}')
+        # print(self.__combination_field)
 
+        def normalize_significand(significand: str, exponent):
+            significand = '0' + significand
 
-    def __get_msd_representation(self):
-        msd = int(str(self.significand)[0])
+            for i in range(len(significand)):
+                index = len(significand) - i - 1
+                digit = significand[index]
+
+                if digit != '0':
+                    break
+
+                exponent += 1
+            
+            parts = significand.split('.')
+            exponent = exponent - len(parts[1])
+
+            significand = parts[0].zfill(34)
+            return significand, exponent
+                
+
+    def __get_msd_representation(self, significand):
+        msd = int(str(significand).zfill(34)[0])
         msd_dpd = BCD(msd)
         
         return msd_dpd
     
     def __get_exponent_representation(self, exponent):
-
-        self.__exponent_representation = bitarray(bin(int(exponent) + self.BIAS)[2:])
-
-        return bitarray(bin(int(exponent) + self.BIAS)[2:])
+        self.__exponent_representation = bitarray(bin(int(exponent) + self.BIAS)[2:].zfill(14))
+        x= int(exponent) + self.BIAS
+        print(int(exponent))
+        print(x)
+        print(self.__exponent_representation)
+        return self.__exponent_representation
 
     """ TODO: Implement the __get_combination_field
 
@@ -112,7 +133,7 @@ class DecimalFloatingPoint:
         if exponent >= 6612:
             return bitarray('11110')
 
-        msd = self.__get_msd_representation().decimal_value
+        msd = self.__get_msd_representation(significand).decimal_value
         exp_representation = self.__get_exponent_representation(exponent)
         
         if msd[0] == 0:
@@ -199,13 +220,15 @@ class DecimalFloatingPoint:
     """
     def __str__(self) -> str:
         formatted = ' '.join([x.to01() for x in self.__coefficient_continuation_field])
-        return f'{self.decimal_value[0]} {self.decimal_value[1:6].to01()} {self.decimal_value[6:13].to01()} { formatted }'
+        return f'0b{self.decimal_value[0]} {self.decimal_value[1:6].to01()} {self.decimal_value[6:17].to01()} { formatted }'
 
 
     """ TODO: 
     """
     def to_hex(self) -> str:
         hex_string = self.decimal_value.tobytes().hex()
+        return f'0x{hex_string}'
+
     
 class NaNDecimalFloatingPoint(DecimalFloatingPoint):
     def __init__(self):
