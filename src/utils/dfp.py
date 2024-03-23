@@ -30,17 +30,27 @@ class DecimalFloatingPoint:
 
     Decimal value is all the parts combined in one bitarray
     """
-    def __init__(self, value: str | float | int, rounding_method):
-        pass
-
+    def __init__(self, significand: float, exponent: int, rounding_method):
+        # Setting the sign
+        if significand < 0:
+            self.__sign = '-'
+        else:
+            self.__sign = '+'
+        # Setting the combination field
+        __self.combination_field = self.__get_combination_field(significand, exponent)
+        # Setting the exponent continuation field
+        __self.exponent_continuation_field = self.__get_exponent_continuation_field(exponent)
+        # Setting the coefficient continuation field 
+        __self.__coefficient_continuation_field = self.__get_coefficient_continuation_field(significand)
 
     """ TODO: Implement the __get_combination_field
 
     Should take in the significand and exponent (in normal base-10
     and exponent representation should be biased) and returns a bitarray
     containing the combination field
-    """
-    def __get_combination_field(self, significand, exponent) -> bitarray:
+    """ 
+    def __get_combination_field(self, float: significand, int: exponent) -> bitarray:
+
         pass
 
 
