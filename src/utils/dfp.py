@@ -81,7 +81,12 @@ class DecimalFloatingPoint:
                     # Determine whether we need to shift the decimal point left or right
                     if num_whole > 34:      # Shift decimal point to the left
                     elif num_whole < 34:    # Shift decimal point to the right
-                    
+                        # Get whole number part
+                        num_shift = 34 - num_whole      # Number of digits to be shifted to the left of dec point
+                        self.exponent -= num_shift      # Adjust exponent to account for shifted digits
+                        substr_whole = significand[:index_decimal_point] + significand[index_decimal_point + 1:index_decimal_point + num_shift + 1]
+                        substr_frac = significand[36]
+
                     for i in range(len(significand)):
                         digit = significand[i]
 
