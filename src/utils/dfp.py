@@ -36,9 +36,8 @@ class DecimalFloatingPoint:
     Decimal value is all the parts combined in one bitarray
     """
     def __init__(self, significand: float, exponent: int, rounding_method):
-
         def normalize_significand(significand: str, exponent):
-
+            # Remove trailing zeroes
             for i in range(len(significand)):
                 index = len(significand) - i - 1
                 digit = significand[index]
@@ -49,7 +48,44 @@ class DecimalFloatingPoint:
                 if digit.isnumeric():
                     exponent += 1
 
-            
+            # Remove padded zeroes
+            if not(significand[0] == '-' or significand[0] == '+'):         # If significand has no sign
+                significand = significand.lstrip('0')
+            else:                                                           # If first char is a sign
+                significand = significand[0] + significand[1:].lstrip('0')
+
+            # Check if significand has a decimal point
+            has_decimal_point = '.' in significand
+
+            # Assume significand has no more trailing zeroes
+            num_digits = 0
+
+
+            # If significand contains a decimal point
+            if has_decimal_point:
+                index_decimal_point = significand.find(".")     # Store index of decimal point
+                has_sign = '-' or '+' in significand
+                num_whole, num_frac = 0
+                # Count how many digits significand has
+                if has_sign:
+                    num_digits = len(significand) - 2
+                    num_whole = index_decimal_point - 1                         # Number of digits to the left of decimal point
+                    num_frac =  len(significand) - index_decimal_point          # Number of digits to the right of decimal point
+                else:
+                    num_digits = len(significand) - 1
+                    num_whole = index_decimal_point
+                    num_frac = index_decimal_point - len(significand - 1)       # Number of digits to the right of decimal point
+                
+                if num_digits > 34:
+                    for i in range(len(significand)):
+                        digit = significand[i]
+
+                        if digit == '-' or digit == '=':
+                            continue
+
+                
+                
+
             # significand = '0' + significand
             parts = significand.split('.')
 
