@@ -110,6 +110,8 @@ class DecimalFloatingPoint:
 
     """
     def __get_coefficient_continuation_field(self, significand) -> list[bitarray]:
+        significand_str = str(significand).zfill(33)  # Pad zeroes to the left until 33 digits
+        
         pass
 
 
