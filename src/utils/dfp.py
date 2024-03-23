@@ -75,7 +75,7 @@ class DecimalFloatingPoint:
             return significand, exponent
 
         # assume significand is a string where integer part is already 34 digits and decimal point is appropriately set
-        def round_off(significand, exponent, rounding_method) -> str:
+        def round_off(significand, rounding_method) -> str:
             parts = significand.split('.')
             # Store digits to the left of the decimal point in a decimal object
             integer_part = Decimal(parts[0])
