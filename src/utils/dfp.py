@@ -60,7 +60,6 @@ class DecimalFloatingPoint:
             # Assume significand has no more trailing zeroes
             num_digits = 0
 
-
             # If significand contains a decimal point
             if has_decimal_point:
                 index_decimal_point = significand.find(".")     # Store index of decimal point
@@ -80,12 +79,14 @@ class DecimalFloatingPoint:
                 if num_digits > 34:
                     # Determine whether we need to shift the decimal point left or right
                     if num_whole > 34:      # Shift decimal point to the left
+
                     elif num_whole < 34:    # Shift decimal point to the right
                         # Get whole number part
                         num_shift = 34 - num_whole      # Number of digits to be shifted to the left of dec point
                         self.exponent -= num_shift      # Adjust exponent to account for shifted digits
                         substr_whole = significand[:index_decimal_point] + significand[index_decimal_point + 1:index_decimal_point + num_shift + 1]
-                        substr_frac = significand[36]
+                        substr_frac = significand[36]   # Store remaining digits
+                        significand = substr_whole + '.' + substr_frac
 
                     for i in range(len(significand)):
                         digit = significand[i]
