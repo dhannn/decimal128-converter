@@ -38,7 +38,7 @@ class DecimalFloatingPoint:
     def __init__(self, significand: str, exponent: str, rounding_method):
 
         def normalize_significand(significand: str, exponent):
-
+            # Remove trailing zeroes
             for i in range(len(significand)):
                 index = len(significand) - i - 1
                 digit = significand[index]
@@ -49,7 +49,55 @@ class DecimalFloatingPoint:
                 if digit.isnumeric():
                     exponent += 1
 
-            
+            # Remove padded zeroes
+            if not(significand[0] == '-' or significand[0] == '+'):         # If significand has no sign
+                significand = significand.lstrip('0')
+            else:                                                           # If first char is a sign
+                significand = significand[0] + significand[1:].lstrip('0')
+
+            # Check if significand has a decimal point
+            has_decimal_point = '.' in significand
+
+            # Assume significand has no more trailing zeroes
+            num_digits = 0
+
+            # If significand contains a decimal point
+            if has_decimal_point:
+                index_decimal_point = significand.find(".")     # Store index of decimal point
+                has_sign = '-' or '+' in significand
+                num_whole, num_frac = 0
+                # Count how many digits significand has
+                if has_sign:
+                    num_digits = len(significand) - 2
+                    num_whole = index_decimal_point - 1                         # Number of digits to the left of decimal point
+                    num_frac =  len(significand) - index_decimal_point          # Number of digits to the right of decimal point
+                else:
+                    num_digits = len(significand) - 1
+                    num_whole = index_decimal_point                             # Number of digits to the left of decimal point
+                    num_frac = index_decimal_point - len(significand - 1)       # Number of digits to the right of decimal point
+                
+                # If rounding off is needed
+                if num_digits > 34:
+                    # Determine whether we need to shift the decimal point left or right
+                    if num_whole > 34:      # Shift decimal point to the left
+                        pass
+                    elif num_whole < 34:    # Shift decimal point to the right
+                        # Get whole number part
+                        num_shift = 34 - num_whole      # Number of digits to be shifted to the left of dec point
+                        self.exponent -= num_shift      # Adjust exponent to account for shifted digits
+                        substr_whole = significand[:index_decimal_point] + significand[index_decimal_point + 1:index_decimal_point + num_shift + 1]
+                        substr_frac = significand[36]   # Store remaining digits
+                        significand = substr_whole + '.' + substr_frac
+
+                    for i in range(len(significand)):
+                        digit = significand[i]
+
+                        if digit == '-' or digit == '=':
+                            continue
+
+                
+                
+
             # significand = '0' + significand
             parts = significand.split('.')
 
