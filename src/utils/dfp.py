@@ -10,7 +10,8 @@ class DecimalFloatingPoint:
     
     BIAS: int = 6176
 
-    original_value: float
+    significand: float
+    exponent: int
     rounding_method: RoundingMethod
     __exponent_representation: int                      # this is with bias
     __sign: str                                         # only '+' or '-'
@@ -49,7 +50,7 @@ class DecimalFloatingPoint:
     and exponent representation should be biased) and returns a bitarray
     containing the combination field
     """ 
-    def __get_combination_field(self, float: significand, int: exponent) -> bitarray:
+    def __get_combination_field(self, significand: float, exponent: int) -> bitarray:
 
         pass
 
