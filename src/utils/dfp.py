@@ -93,7 +93,7 @@ class DecimalFloatingPoint:
     and exponent representation should be biased) and returns a bitarray
     containing the combination field
     """ 
-    def __get_combination_field(self, float: significand, int: exponent) -> bitarray:
+    def __get_combination_field(self, significand: float, exponent: int) -> bitarray:
 
         pass
 
