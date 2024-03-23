@@ -85,7 +85,7 @@ class DecimalFloatingPoint:
 
     def __get_msd_representation(self):
         msd = int(str(self.significand)[0])
-        msd_dpd = DPD(msd)
+        msd_dpd = BCD(msd)
         
         return msd_dpd
     
@@ -182,7 +182,9 @@ class DecimalFloatingPoint:
     continuation,...)
     """
     def __str__(self) -> str:
-        pass
+        formatted = ' '.join(self.__coefficient_continuation_field)
+        return f'{self.decimal_value[0]} {self.decimal_value[1:6]} {self.decimal_value[6:13]} { formatted }'
+
 
     """ TODO: 
     """
