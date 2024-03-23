@@ -34,7 +34,7 @@ class DecimalFloatingPoint:
     def __init__(self, significand: float, exponent: int, rounding_method):
         # Normalizing the significand to 34 digits
         # Counting significand's number of digits, excluding sign and decimal point
-        total_digits = sum(1 for char in str(abs(number)) if char.isdigit())
+        total_digits = sum(1 for char in str(abs(significand)) if char.isdigit())
         # If significand has more than 34 digits, move the decimal place after the 34th digit
         if total_digits > 34:
             digits_to_move = total_digits - 34          # Determine number of digits to move
@@ -97,8 +97,8 @@ class DecimalFloatingPoint:
         msd = 0     # Most significant digit
         msd_bits = bitarray('0000')
 
-        total_digits = sum(1 for char in str(abs(number)) if char.isdigit())
-        if total_digits < 34:               # if zeroes need to be padded
+        total_digits = sum(1 for char in str(abs(significand)) if char.isdigit())
+        if total_digits < 34:                       # if zeroes need to be padded
             significand_str = str(abs(significand))
             significand_str = significand_str.zfill(34)
             msd = int(significand_str[0])           # get most significant digit
