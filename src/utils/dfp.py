@@ -153,8 +153,15 @@ class DecimalFloatingPoint:
     Should equal if all the object variables (sign, combination field, exponent 
     continuation, coefficient continuation and decimal value)
     """
-    def __eq__(self, __value: object) -> bool:
-        __value: DecimalFloatingPoint
+    def __eq__(self, __value: "DecimalFloatingPoint") -> bool:
+        return self.decimal_value ==__value.decimal_value \
+            and self.exponent == __value.exponent \
+            and self.significand == __value.significand \
+            and self.__coefficient_continuation_field == __value.__coefficient_continuation_field\
+            and self.__exponent_continuation_field == __value.__exponent_continuation_field\
+            and self.__combination_field == __value.__combination_field\
+            and self.__exponent_representation == __value.__exponent_representation\
+            and self.__sign == __value.__sign
 
 
     """ TODO: Override the string function
