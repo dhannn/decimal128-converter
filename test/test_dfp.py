@@ -1,6 +1,8 @@
 import unittest
 
-from utils.dfp import *
+from bitarray import bitarray
+
+from src.utils.dfp import *
 
 class TestDFP(unittest.TestCase):
 
