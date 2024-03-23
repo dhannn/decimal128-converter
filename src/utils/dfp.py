@@ -37,27 +37,7 @@ class DecimalFloatingPoint:
     """
     def __init__(self, significand: float, exponent: int, rounding_method):
 
-        self.significand, self.exponent = normalize_significand(significand, exponent)
-        
-        self.significand = significand
-        self.exponent = int(exponent)
-        self.rounding_method = rounding_method
-        
-        # Setting the sign
-        self.__sign = 0 if self.significand >= 0 else 1
-        # Setting the combination field
-        self.__combination_field = self.__get_combination_field(significand, exponent)
-        # Setting the exponent continuation field
-        self.__exponent_continuation_field = self.__get_exponent_continuation_field(exponent)
-        # Setting the coefficient continuation field 
-        self.__coefficient_continuation_field = self.__get_coefficient_continuation_field(significand)
-
-        tmp = ''.join([x.to01() for x in self.__coefficient_continuation_field])
-        self.decimal_value = bitarray(f'{self.__sign}{self.__combination_field.to01()}{self.__exponent_continuation_field.to01()}{tmp}')
-        # print(self.__combination_field)
-
         def normalize_significand(significand: str, exponent):
-            significand = '0' + significand
 
             for i in range(len(significand)):
                 index = len(significand) - i - 1
@@ -66,9 +46,16 @@ class DecimalFloatingPoint:
                 if digit != '0':
                     break
 
-                exponent += 1
+                if digit.isnumeric():
+                    exponent += 1
+
             
+            # significand = '0' + significand
             parts = significand.split('.')
+
+            if len(parts) == 1:
+                return parts[0], exponent
+
             exponent = exponent - len(parts[1])
 
             significand = parts[0].zfill(34)
@@ -76,6 +63,25 @@ class DecimalFloatingPoint:
 
         def round_off(significand, exponent, rounding_method):
             pass
+
+        self.significand, self.exponent = normalize_significand(significand, exponent)
+        
+        self.significand
+        self.exponent = exponent = int(exponent)
+        self.rounding_method = rounding_method
+        
+        # Setting the sign
+        self.__sign = 0 if int(self.significand) >= 0 else 1
+        # Setting the combination field
+        self.__combination_field = self.__get_combination_field(self.significand, exponent)
+        # Setting the exponent continuation field
+        self.__exponent_continuation_field = self.__get_exponent_continuation_field(exponent)
+        # Setting the coefficient continuation field 
+        self.__coefficient_continuation_field = self.__get_coefficient_continuation_field(significand)
+
+        tmp = ''.join([x.to01() for x in self.__coefficient_continuation_field])
+        self.decimal_value = bitarray(f'{self.__sign}{self.__combination_field.to01()}{self.__exponent_continuation_field.to01()}{tmp}')
+        # print(self.__combination_field)
                 
 
     def __get_msd_representation(self, significand):
@@ -98,7 +104,7 @@ class DecimalFloatingPoint:
     and exponent representation should be biased) and returns a bitarray
     containing the combination field
     """ 
-    def __get_combination_field(self, significand: float, exponent: int) -> bitarray:
+    def __get_combination_field(self, significand: str, exponent: int) -> bitarray:
         if exponent >= 6612:
             return bitarray('11110')
 
@@ -107,9 +113,9 @@ class DecimalFloatingPoint:
         
         if msd[0] == 0:
             combination_field = bitarray(
-                f'{exp_representation[0]}{exp_representation[1]}0{msd[1]}{msd[2]}{msd[3]}')
+                f'{exp_representation[0]}{exp_representation[1]}{msd[1]}{msd[2]}{msd[3]}')
         elif msd[0] == 1 and msd[1] == 1:
-            combination_field = bitarray(f'11{exp_representation[0]}{exp_representation[1]}100{msd[3]}')
+            combination_field = bitarray(f'11{exp_representation[0]}{exp_representation[1]}{msd[3]}')
         
         return combination_field
 
@@ -133,7 +139,7 @@ class DecimalFloatingPoint:
     def __get_coefficient_continuation_field(self, significand) -> list[bitarray]:
         significand_str = str(significand).zfill(33)  # Pad zeroes to the left until 33 digits
         # Store significand by 3 digits in an array
-        coefficient_continuation_field = [int(significand_str[i:i+3]) for i in range(0, len(significand_str), 3)]
+        coefficient_continuation_field = [int(significand_str[i:i+3]) for i in range(1, len(significand_str), 3)]
         dpd_representation = []
 
         for val in coefficient_continuation_field:
@@ -189,7 +195,7 @@ class DecimalFloatingPoint:
     """
     def __str__(self) -> str:
         formatted = ' '.join([x.to01() for x in self.__coefficient_continuation_field])
-        return f'0b{self.decimal_value[0]} {self.decimal_value[1:6].to01()} {self.decimal_value[6:17].to01()} { formatted }'
+        return f'0b{self.decimal_value[0]} {self.decimal_value[1:6].to01()} {self.decimal_value[6:18].to01()} { formatted }'
 
 
     """ TODO: 
