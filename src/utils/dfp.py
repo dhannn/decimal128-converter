@@ -86,6 +86,9 @@ class DecimalFloatingPoint:
         # Setting the coefficient continuation field 
         self.__coefficient_continuation_field = self.__get_coefficient_continuation_field(significand)
 
+        tmp = ''.join([x.to01() for x in self.__coefficient_continuation_field])
+        self.decimal_value = bitarray(f'{self.__sign}{self.__combination_field.to01()}{self.__exponent_continuation_field.to01()}{tmp}')
+
 
     def __get_msd_representation(self):
         msd = int(str(self.significand)[0])
@@ -126,6 +129,9 @@ class DecimalFloatingPoint:
     a bitarray representing the exponent continuation field
     """
     def __get_exponent_continuation_field(self, exponent) -> bitarray:
+        if exponent >= 6112:
+            return bitarray(12)
+
         exp_representation = self.__get_exponent_representation(exponent)
         last_12_bits = exp_representation[-12:]     # Get last 12 bits
         return bitarray(last_12_bits)
@@ -192,8 +198,8 @@ class DecimalFloatingPoint:
     continuation,...)
     """
     def __str__(self) -> str:
-        formatted = ' '.join([str(x) for x in self.__coefficient_continuation_field])
-        return f'{self.decimal_value[0]} {self.decimal_value[1:6]} {self.decimal_value[6:13]} { formatted }'
+        formatted = ' '.join([x.to01() for x in self.__coefficient_continuation_field])
+        return f'{self.decimal_value[0]} {self.decimal_value[1:6].to01()} {self.decimal_value[6:13].to01()} { formatted }'
 
 
     """ TODO: 
@@ -201,3 +207,7 @@ class DecimalFloatingPoint:
     def to_hex(self) -> str:
         hex_string = self.decimal_value.tobytes().hex()
         return hex_string
+    
+
+class NaNDecimalFloatingPoint(DecimalFloatingPoint):
+    pass
