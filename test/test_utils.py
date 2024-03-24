@@ -63,12 +63,29 @@ class TestUtils(unittest.TestCase):
     def test__beyondSignificantDigits_Negative_WithDecimal(self):
         pass
 
-    def test__roundOff_RoundNearest_Positive(self):
-        self.__test_rounding('123456', RoundingMethod.ROUND_TNE, '12346', '1')
+    def test__roundOff_RoundNearest_RoundingUp(self):
+        self.__test_rounding('123456', RoundingMethod.ROUND_TNE, '12346', 5)
 
+    def test__roundOff_RoundNearest_RoundingDown(self):
+        self.__test_rounding('123451234', RoundingMethod.ROUND_TNE, '12345', 5)
+    
+    def test__roundOff_RoundNearest_Negative(self):
+        self.__test_rounding('123456', RoundingMethod.ROUND_TNE, '12346', 5, 1)
+    
+    def test__roundUp_Positive(self):
+        self.__test_rounding('1234567', RoundingMethod.ROUND_UP, '12346', 5)
+    
+    def test__roundUp_Negative(self):
+        self.__test_rounding('1234567', RoundingMethod.ROUND_UP, '12345', 5, 1)
+    
+    def test__roundDown_Positive(self):
+        self.__test_rounding('1234567', RoundingMethod.ROUND_DOWN, '12345', 5, 0)
+    
+    def test__roundDown_Negative(self):
+        self.__test_rounding('1234567', RoundingMethod.ROUND_DOWN, '12346', 5, 1)
 
-    def __test_rounding(self, number, rounding_method: RoundingMethod, expected_significand, expected_offset):
-        actual_significand, actual_offset = round_off(number, self.SIGFIGS, rounding_method)
+    def __test_rounding(self, number, rounding_method: RoundingMethod, expected_significand, expected_offset, sign=0):
+        actual_significand, actual_offset = round_off(number, self.SIGFIGS, rounding_method, sign=sign)
 
         self.assertEquals(
             expected_significand, actual_significand

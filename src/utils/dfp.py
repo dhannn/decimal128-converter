@@ -1,7 +1,7 @@
 from bitarray import bitarray
 from enum import Enum
-from bcd import BCD
-from dpd import DPD 
+from src.utils.bcd import BCD
+from src.utils.dpd import DPD 
 from decimal import Decimal
 
 
