@@ -1,7 +1,8 @@
 from bitarray import bitarray
 from enum import Enum
-from utils.bcd import BCD
-from utils.dpd import DPD
+from bcd import BCD
+from dpd import DPD 
+from decimal import Decimal
 
 
 class RoundingMethod(Enum):
@@ -67,7 +68,7 @@ class DecimalFloatingPoint:
 
                 significand = round_off(significand, lower_digits, rounding_method)
                 normalized_str = significand + '.' + lower_digits
-            else:
+            else:   
                 significand = ''.join(digits[:length]) # Move decimal point to the rightmost part
                 normalized_str = significand + '.'     # Appends decimal point to end 
 
@@ -83,7 +84,6 @@ class DecimalFloatingPoint:
 
         # assume significand is a string where integer part is already 34 digits and decimal point is appropriately set
         def round_off(significand, lower_digits, rounding_method) -> str:
-            print(significand)
             significand_dec = int(significand)
 
             place_value = (10 ** (len(lower_digits) - 1))
