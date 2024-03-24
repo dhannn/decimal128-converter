@@ -51,7 +51,7 @@ class TestDFP(unittest.TestCase):
         
     def test_ZeroPositive(self):
         _input = '0'
-        expected = bitarray('0110 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000')
+        expected = bitarray('0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000')
         actual = DecimalFloatingPoint(_input, 6112, RoundingMethod.ROUND_TNE).decimal_value
 
         self.assertEqual(expected, actual,
@@ -59,7 +59,7 @@ class TestDFP(unittest.TestCase):
         
     def test_ZeroNegative(self):
         _input = '-0'
-        expected = bitarray('1110 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000')
+        expected = bitarray('1000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000')
         actual = DecimalFloatingPoint(_input, 6112, RoundingMethod.ROUND_TNE).decimal_value
 
         self.assertEqual(expected, actual,
