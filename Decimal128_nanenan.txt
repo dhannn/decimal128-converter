@@ -1,3 +1,0 @@
-Base-10:		nanenan
-Decimal128:		NaN representation (binary)
-				NaN representation (hex)

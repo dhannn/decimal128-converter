@@ -1,8 +1,7 @@
 from bitarray import bitarray
 from enum import Enum
-from src.utils.bcd import BCD
-from src.utils.dpd import DPD 
-from decimal import Decimal
+from utils.bcd import BCD
+from utils.dpd import DPD
 
 
 class RoundingMethod(Enum):
