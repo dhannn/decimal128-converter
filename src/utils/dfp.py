@@ -44,6 +44,15 @@ class DecimalFloatingPoint:
                 self.decimal_value = bitarray('0')
             self.decimal_value.extend('010 0010 0000 1000')
             self.decimal_value.extend('0' * 112)
+        
+        # To handle positive and negative infinity
+        elif Decimal(exponent) >= 6112:   
+            if significand[0] == '-':
+                self.decimal_value = bitarray('1')
+            else:
+                self.decimal_value = bitarray('0')
+            self.decimal_value.extend('111 1000')
+            self.decimal_value.extend('0' * 120)   
 
         else:
             def normalize_significand(significand: str, exponent):
