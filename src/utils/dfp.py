@@ -55,77 +55,55 @@ class DecimalFloatingPoint:
             else:                                                           # If first char is a sign
                 significand = significand[0] + significand[1:].lstrip('0')
 
-            # Check if significand has a decimal point
-            has_decimal_point = '.' in significand
+            # If significand contains a decimal point 
 
-            # Assume significand has no more trailing zeroes
-            num_digits = 0
+            index_decimal_point = significand.find(".")     # Store index of decimal point
+            
+            digits = [ch for ch in significand if ch.isdigit()]
+            length = len(digits)
+            normalized_str = ''
+            if length > 34:
+                significand = ''.join(digits[:34])
+                lower_digits = ''.join(digits[34:])
 
-            # If significand contains a decimal point
-            if has_decimal_point:
-                index_decimal_point = significand.find(".")     # Store index of decimal point
-                has_sign = '-' or '+' in significand
-                num_whole, num_frac = 0
-                # Count how many digits significand has
-                if has_sign:
-                    num_digits = len(significand) - 2
-                    num_whole = index_decimal_point - 1                         # Number of digits to the left of decimal point
-                    num_frac =  len(significand) - index_decimal_point          # Number of digits to the right of decimal point
-                else:
-                    num_digits = len(significand) - 1
-                    num_whole = index_decimal_point                             # Number of digits to the left of decimal point
-                    num_frac = index_decimal_point - len(significand - 1)       # Number of digits to the right of decimal point
-                
-                # If rounding off is needed
-                if num_digits > 34:
-                    # Determine whether we need to shift the decimal point left or right
-                    if num_whole > 34:      # Shift decimal point to the left
-                        pass
-                    elif num_whole < 34:    # Shift decimal point to the right
-                        # Get whole number part
-                        num_shift = 34 - num_whole      # Number of digits to be shifted to the left of dec point
-                        self.exponent -= num_shift      # Adjust exponent to account for shifted digits
-                        substr_whole = significand[:index_decimal_point] + significand[index_decimal_point + 1:index_decimal_point + num_shift + 1]
-                        substr_frac = significand[36]   # Store remaining digits
-                        significand = substr_whole + '.' + substr_frac
+                significand = round_off(significand, lower_digits, rounding_method)
+                normalized_str = significand + '.' + lower_digits
+            else:
+                significand = ''.join(digits[:length]) # Move decimal point to the rightmost part
+                normalized_str = significand + '.'     # Appends decimal point to end 
 
-                    for i in range(len(significand)):
-                        digit = significand[i]
+            
+            significand = significand.zfill(34)
+            new_index_decimal_point = normalized_str.find(".")  # Find new position of decimal point
 
-                        if digit == '-' or digit == '=':
-                            continue
+            if index_decimal_point != -1:
+                exponent = int(exponent)
+                exponent += (index_decimal_point - new_index_decimal_point)
 
-                
-                
-
-            # significand = '0' + significand
-            parts = significand.split('.')
-
-            if len(parts) == 1:
-                return parts[0], exponent
-
-            exponent = exponent - len(parts[1])
-
-            significand = parts[0].zfill(34)
             return significand, exponent
 
         # assume significand is a string where integer part is already 34 digits and decimal point is appropriately set
-        def round_off(significand, rounding_method) -> str:
-            parts = significand.split('.')
-            # Store digits to the left of the decimal point in a decimal object
-            integer_part = Decimal(parts[0])
-            # Store digits to the right of the decimal point in a decimal object
-            fractional_part = Decimal(parts[1])
+        def round_off(significand, lower_digits, rounding_method) -> str:
+            print(significand)
+            significand_dec = int(significand)
+
+            place_value = (10 ** (len(lower_digits) - 1))
+            midpoint = place_value * 5
 
             if rounding_method == RoundingMethod.ROUND_UP:
-                return integer_part + 1
+                return str(significand_dec + 1)
             elif rounding_method == RoundingMethod.ROUND_DOWN:
-                return integer_part
+                return significand
             elif rounding_method == RoundingMethod.ROUND_TNE:
-                if fractional_part % 2 == 1:        # if odd
-                    return integer_part + 1
-                else:                               # if even
-                    return integer_part
+                if int(lower_digits) == midpoint:          
+                    if significand_dec % 2 == 0:    
+                        return significand
+                    else:
+                        return str(significand_dec + 1)
+                elif int(lower_digits) > midpoint:                               
+                    return str(significand_dec + 1)
+                elif int(lower_digits) < midpoint:   
+                    return significand
 
         if significand[0] == '-':
             significand = significand[1:]
@@ -133,20 +111,19 @@ class DecimalFloatingPoint:
         else:
             self.__sign = 0
 
-
-        self.significand, self.exponent = normalize_significand(significand, exponent)
+        significand, exponent = normalize_significand(significand, exponent)
         
-        self.significand
-        self.exponent = exponent = int(exponent)
+        self.significand = significand
+        self.exponent = int(exponent)
         self.rounding_method = rounding_method
         
         # Setting the sign
         # Setting the combination field
-        self.__combination_field = self.__get_combination_field(self.significand, exponent)
+        self.__combination_field = self.__get_combination_field(self.significand, self.exponent)
         # Setting the exponent continuation field
-        self.__exponent_continuation_field = self.__get_exponent_continuation_field(exponent)
+        self.__exponent_continuation_field = self.__get_exponent_continuation_field(self.exponent)
         # Setting the coefficient continuation field 
-        self.__coefficient_continuation_field = self.__get_coefficient_continuation_field(significand)
+        self.__coefficient_continuation_field = self.__get_coefficient_continuation_field(self.significand)
 
         tmp = ''.join([x.to01() for x in self.__coefficient_continuation_field])
         self.decimal_value = bitarray(f'{self.__sign}{self.__combination_field.to01()}{self.__exponent_continuation_field.to01()}{tmp}')

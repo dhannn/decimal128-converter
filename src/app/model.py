@@ -1,5 +1,5 @@
 import math
-from src.utils.dfp import *
+from utils.dfp import *
 
 
 class MockDecimalFloatingPoint(DecimalFloatingPoint):

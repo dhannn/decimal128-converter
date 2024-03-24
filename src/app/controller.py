@@ -1,5 +1,5 @@
-from model import Model
-from view import View
+from app.model import Model
+from app.view import View
 from PyQt6.QtWidgets import QMessageBox
 
 class Controller:

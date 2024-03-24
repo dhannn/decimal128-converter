@@ -72,7 +72,7 @@ class View(QWidget):
         self.base10_container.addWidget(self.base10_exp, 0)
 
         self.rounding_method_dropdown.addItems(['Round nearest-ties to even', 'Round up', 'Round down'])
-        self.rounding_method_dropdown.setStyleSheet('QComboBox::drop-down:button { border: none; border-radius: 5px; width: 50px; background-color: #B4B8C5; padding: 10px 0px 10px; image: url(\'src/assets/caret-down-solid.svg\') } QComboBox { padding: 15px 10px; font-size: 18px; font-family: Inter; border: 1px solid #B4B8C5; border-radius: 10px;  } QComboBox::drop-down { padding: 15px 10px; }')
+        self.rounding_method_dropdown.setStyleSheet('QComboBox::drop-down:button { border: none; border-radius: 5px; width: 50px; background-color: #B4B8C5; padding: 10px 0px 10px; image: url(\'assets/caret-down-solid.svg\') } QComboBox { padding: 15px 10px; font-size: 18px; font-family: Inter; border: 1px solid #B4B8C5; border-radius: 10px;  } QComboBox::drop-down { padding: 15px 10px; }')
         self.rounding_method_label.setStyleSheet('font-size: 18px; font-family: Inter;')
 
         self.convert_button.setStyleSheet('QPushButton { padding: 18px 10px; font-size: 18px; font-family: Inter; background-color: #B4B8C5; border: 1px solid #E9EBF8; border-radius: 10px; color: #FEFFFE; }')
