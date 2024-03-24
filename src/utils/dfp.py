@@ -37,7 +37,7 @@ class DecimalFloatingPoint:
     """
     def __init__(self, significand: str, exponent: str, rounding_method):
         # To handle positive and negative zeroes
-        if Decimal(significand) == 0 or Decimal(significand) == -0:
+        if Decimal(significand) == 0 or Decimal(significand) == -0 or Decimal(exponent) < -6176:
             if significand[0] == '-':
                 self.decimal_value = bitarray('1')
             else:
