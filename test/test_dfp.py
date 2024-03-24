@@ -108,7 +108,7 @@ class TestDFP(unittest.TestCase):
     def test_DenormalizedNormalPositiveWithDecimal(self):
         _input = '111234567890123456789012345678.901251'
         expected = bitarray('0_01001_0111_1101_1010_001_001_0010_011_100_0101_110_111_1000_001_000_1101_010_011_0100_101_110_0111_000_001_1110_001_010_0011_100_101_0110_111_100_1111_000_001_0011')
-        actual = DecimalFloatingPoint(_input, -6, RoundingMethod.ROUND_TNE).decimal_value
+        actual = DecimalFloatingPoint(_input, -66, RoundingMethod.ROUND_TNE).decimal_value
 
         self.assertEqual(expected, actual,
                     f'Expected is { expected }, returns { actual }')
