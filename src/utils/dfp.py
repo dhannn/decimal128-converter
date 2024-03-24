@@ -137,7 +137,7 @@ class DecimalFloatingPoint:
     
     def __get_exponent_representation(self, exponent):
         self.__exponent_representation = bitarray(bin(int(exponent) + self.BIAS)[2:].zfill(14))
-        x= int(exponent) + self.BIAS
+        x = int(exponent) + self.BIAS
         print(int(exponent))
         print(x)
         print(self.__exponent_representation)
