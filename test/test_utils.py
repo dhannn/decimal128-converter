@@ -13,15 +13,15 @@ class TestUtils(unittest.TestCase):
             significand, self.EXP, '', self.SIGFIGS
         )
 
-        self.assertEquals(
+        self.assertEqual(
             expected_sign, actual_sign
         )
 
-        self.assertEquals(
+        self.assertEqual(
             expected_significand, actual_significand, 
             f'Expected {expected_significand}, returns {actual_significand}')
         
-        self.assertEquals(
+        self.assertEqual(
             expected_exponent, actual_exponent
         )
 
@@ -87,10 +87,10 @@ class TestUtils(unittest.TestCase):
     def __test_rounding(self, number, rounding_method: RoundingMethod, expected_significand, expected_offset, sign=0):
         actual_significand, actual_offset = round_off(number, self.SIGFIGS, rounding_method, sign=sign)
 
-        self.assertEquals(
+        self.assertEqual(
             expected_significand, actual_significand
         )
 
-        self.assertEquals(
+        self.assertEqual(
             expected_offset, actual_offset
         )
