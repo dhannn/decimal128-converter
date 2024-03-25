@@ -29,12 +29,6 @@ class Controller:
 
         try:
             rounding_method, base, exp = self.view.get_inputs()
-
-            # _base = float(base)
-            # _exp = float(exp)
-            # original_value = _base ** _exp
-            # print(original_value)
-            
         except ValueError:
             rounding_method, base, exp = rounding_method, float('NaN'), float('NaN')
 

@@ -1,7 +1,7 @@
 from bitarray import bitarray
 from enum import Enum
 from src.utils.bcd import BCD
-from src.utils.dpd import DPD 
+from src.utils.dpd import DPD
 from decimal import Decimal
 
 
@@ -173,11 +173,12 @@ class DecimalFloatingPoint:
 
         msd = self.__get_msd_representation(significand).decimal_value
         exp_representation = self.__get_exponent_representation(exponent)
+        print(msd)
         
         if msd[0] == 0:
             combination_field = bitarray(
                 f'{exp_representation[0]}{exp_representation[1]}{msd[1]}{msd[2]}{msd[3]}')
-        elif msd[0] == 1 and msd[1] == 1:
+        elif msd[0] == 1 and msd[1] == 0 and msd[2] == 0:
             combination_field = bitarray(f'11{exp_representation[0]}{exp_representation[1]}{msd[3]}')
         
         return combination_field
@@ -200,9 +201,9 @@ class DecimalFloatingPoint:
 
     """
     def __get_coefficient_continuation_field(self, significand) -> list[bitarray]:
-        significand_str = str(significand).zfill(33)  # Pad zeroes to the left until 33 digits
+        significand_str = str(significand[1:]).zfill(33)  # Pad zeroes to the left until 33 digits
         # Store significand by 3 digits in an array
-        coefficient_continuation_field = [int(significand_str[i:i+3]) for i in range(1, len(significand_str), 3)]
+        coefficient_continuation_field = [int(significand_str[i:i+3]) for i in range(0, len(significand_str), 3)]
         dpd_representation = []
 
         for val in coefficient_continuation_field:
@@ -242,8 +243,8 @@ class DecimalFloatingPoint:
     """ TODO: 
     """
     def to_hex(self) -> str:
-        hex_string = self.decimal_value.tobytes().hex()
-        return f'0x{hex_string}'
+        hex_string = [ch + ' ' if i % 4 == 3 else ch for i, ch in enumerate(self.decimal_value.tobytes().hex())]
+        return f'0x{"".join(hex_string)}'
 
     
 class NaNDecimalFloatingPoint(DecimalFloatingPoint):

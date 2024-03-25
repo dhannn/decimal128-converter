@@ -38,11 +38,7 @@ class Model:
         self.roundingOption = roundingOption
 
     def convert_to_decimal(self) -> DecimalFloatingPoint:
-        # if math.isnan(self.exponent) or math.isnan(self.significand == float('NaN')):
-        #     return NaNDecimalFloatingPoint()
-
         return DecimalFloatingPoint(self.significand, self.exponent, self.roundingOption)
-        # return MockDecimalFloatingPoint().set_vars(self.significand, self.exponent)
     
     def save_to_text_file(self) -> None:
         dfp: DecimalFloatingPoint
