@@ -6,7 +6,6 @@ import os, sys
 script_dir = os.path.dirname(os.path.realpath(__file__))
 parent_dir = os.path.dirname(script_dir)
 sys.path.insert(1, parent_dir)
-from src.utils.RoundingMethod import RoundingMethod
 from src.utils.dfp import *
 
 class TestDFP(unittest.TestCase):

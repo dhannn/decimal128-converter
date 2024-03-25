@@ -32,48 +32,47 @@ class DecimalFloatingPoint:
     Decimal value is all the parts combined in one bitarray
     """
     def __init__(self, significand: str, exponent: str, rounding_method):
+        print('saaaaaaaaaa')
         # To handle positive and negative zeroes
-        if Decimal(significand) == 0 or Decimal(significand) == -0 or Decimal(exponent) < -6176:
-            if significand[0] == '-':
-                self.decimal_value = bitarray('1')
-            else:
-                self.decimal_value = bitarray('0')
-            self.decimal_value.extend('010 0010 0000 1000')
-            self.decimal_value.extend('0' * 112)
+        # if Decimal(significand) == 0 or Decimal(significand) == -0 or Decimal(exponent) < -6176:
+        #     if significand[0] == '-':
+        #         self.decimal_value = bitarray('1')
+        #     else:
+        #         self.decimal_value = bitarray('0')
+        #     self.decimal_value.extend('010 0010 0000 1000')
+        #     self.decimal_value.extend('0' * 112)
+        #     return
         
         # To handle positive and negative infinity
-        elif Decimal(exponent) >= 6112:   
-            if significand[0] == '-':
-                self.decimal_value = bitarray('1')
-            else:
-                self.decimal_value = bitarray('0')
-            self.decimal_value.extend('111 1000')
-            self.decimal_value.extend('0' * 120)   
+        # if Decimal(exponent) >= 6112:
+        #     if significand[0] == '-':
+        #         self.decimal_value = bitarray('1')
+        #     else:
+        #         self.decimal_value = bitarray('0')
+        #     self.decimal_value.extend('111 1000')
+        #     self.decimal_value.extend('0' * 120)
+        #     return   
 
-        else:
-            if significand[0] == '-':
-                significand = significand[1:]
-                self.__sign = 1
-            else:
-                self.__sign = 0
+        
+        sign, significand, exponent = dfp_utils.normalize_significand(significand, exponent, rounding_method)
+        
+        
+        self.__sign = sign
+        self.significand = significand
+        self.exponent = Decimal(exponent)
+        self.rounding_method = rounding_method
+        
+        # Setting the sign
+        # Setting the combination field
+        self.__combination_field = self.__get_combination_field(self.significand, self.exponent)
+        # Setting the exponent continuation field
+        self.__exponent_continuation_field = self.__get_exponent_continuation_field(self.exponent)
+        # Setting the coefficient continuation field 
+        self.__coefficient_continuation_field = self.__get_coefficient_continuation_field(self.significand, self.exponent)
 
-            sign, significand, exponent = dfp_utils.normalize_significand(significand, exponent, rounding_method)
-            
-            self.significand = significand
-            self.exponent = int(exponent)
-            self.rounding_method = rounding_method
-            
-            # Setting the sign
-            # Setting the combination field
-            self.__combination_field = self.__get_combination_field(self.significand, self.exponent)
-            # Setting the exponent continuation field
-            self.__exponent_continuation_field = self.__get_exponent_continuation_field(self.exponent)
-            # Setting the coefficient continuation field 
-            self.__coefficient_continuation_field = self.__get_coefficient_continuation_field(self.significand)
-
-            tmp = ''.join([x.to01() for x in self.__coefficient_continuation_field])
-            self.decimal_value = bitarray(f'{self.__sign}{self.__combination_field.to01()}{self.__exponent_continuation_field.to01()}{tmp}')
-            # print(self.__combination_field)
+        tmp = ''.join([x.to01() for x in self.__coefficient_continuation_field])
+        self.decimal_value = bitarray(f'{self.__sign}{self.__combination_field.to01()}{self.__exponent_continuation_field.to01()}{tmp}')
+        # print(self.__combination_field)
                 
 
     def __get_msd_representation(self, significand):
@@ -85,9 +84,6 @@ class DecimalFloatingPoint:
     def __get_exponent_representation(self, exponent):
         self.__exponent_representation = bitarray(bin(int(exponent) + self.BIAS)[2:].zfill(14))
         x = int(exponent) + self.BIAS
-        print(int(exponent))
-        print(x)
-        print(self.__exponent_representation)
         return self.__exponent_representation
 
     """ TODO: Implement the __get_combination_field
@@ -97,8 +93,14 @@ class DecimalFloatingPoint:
     containing the combination field
     """ 
     def __get_combination_field(self, significand: str, exponent: int) -> bitarray:
-        if exponent >= 6612:
+        print(type(exponent))
+        print(exponent)
+        print(exponent > 6111)
+        if exponent > 6111:
+            print('ssss')
             return bitarray('11110')
+        # if significand == str(Decimal(34)):
+        #     return bitarray('11110')
 
         msd = self.__get_msd_representation(significand).decimal_value
         exp_representation = self.__get_exponent_representation(exponent)
@@ -129,7 +131,11 @@ class DecimalFloatingPoint:
     """ TODO: Implement the __get_coefficient_continuation_field
 
     """
-    def __get_coefficient_continuation_field(self, significand) -> list[bitarray]:
+    def __get_coefficient_continuation_field(self, significand, exponent=None) -> list[bitarray]:
+
+        if exponent is not None and exponent > 6111:
+            return [ bitarray(10) for _ in range(11) ]
+
         significand_str = str(significand[1:]).zfill(33)  # Pad zeroes to the left until 33 digits
         # Store significand by 3 digits in an array
         coefficient_continuation_field = [int(significand_str[i:i+3]) for i in range(0, len(significand_str), 3)]
