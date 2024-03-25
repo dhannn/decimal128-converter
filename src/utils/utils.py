@@ -20,6 +20,10 @@ def normalize_significand(significand: str, exponent: str, rounding_method, num_
 
         if digit.isnumeric():
             _exponent += 1
+    
+    # Restore exponent if all zeroes
+    if len(_significand) == _exponent - Decimal(exponent):
+        _exponent = Decimal(exponent)
 
     # Remove leading zeroes
     _significand = _significand.lstrip('0')

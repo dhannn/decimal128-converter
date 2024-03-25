@@ -26,7 +26,9 @@ class TestUtils(unittest.TestCase):
             expected_exponent, actual_exponent
         )
 
-    
+    def test__zeroes(self):
+        self.__test('00', 0, '00000', '0')
+
     def test__withinSignificantDigits_Positive_NoDecimal(self):
         significand = '12'
 
