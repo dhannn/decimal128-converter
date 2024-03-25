@@ -44,7 +44,7 @@ class DecimalFloatingPoint:
     
         self.__combination_field = self.__get_combination_field(self.significand, self.exponent)
 
-        self.__exponent_continuation_field = self.__get_exponent_continuation_field(self.exponent)
+        self.__exponent_continuation_field = self.__get_exponent_continuation_field(self.exponent, self.significand)
 
         self.__coefficient_continuation_field = self.__get_coefficient_continuation_field(self.significand, self.exponent)
 
@@ -64,6 +64,11 @@ class DecimalFloatingPoint:
                                                   .lstrip('-')
                                                   .lstrip('0b')
                                                   .zfill(14))
+        print(exponent + self.BIAS)
+        print(exponent + self.BIAS)
+        print(bin(int(exponent) + self.BIAS).lstrip('+')
+                                                  .lstrip('-')
+                                                  .zfill(14))
         return self.__exponent_representation
 
     """ TODO: Implement the __get_combination_field
@@ -73,13 +78,17 @@ class DecimalFloatingPoint:
     containing the combination field
     """ 
     def __get_combination_field(self, significand: str, exponent: int) -> bitarray:
-        # Check for infinities
-        if self.is_infinity(exponent):
+
+        if Decimal(significand) != 0 and self.is_infinity(exponent):
             return bitarray('11110')
 
         msd = self.__get_msd_representation(significand).decimal_value
-        exp_representation = self.__get_exponent_representation(exponent)
-        print(msd)
+
+        if Decimal(significand) == 0:
+            exp_representation = self.__get_exponent_representation(0)
+            print("exp: " + str(exp_representation))
+        else: 
+            exp_representation = self.__get_exponent_representation(exponent)
         
         if msd[0] == 0:
             combination_field = bitarray(
@@ -94,10 +103,13 @@ class DecimalFloatingPoint:
     Should take in the exponent (biased and in base-10) and return 
     a bitarray representing the exponent continuation field
     """
-    def __get_exponent_continuation_field(self, exponent) -> bitarray:
-        
-        if self.is_infinity(exponent):
+    def __get_exponent_continuation_field(self, exponent, significand=None) -> bitarray:
+
+        if significand is not None and Decimal(significand) != 0 and self.is_infinity(exponent):
             return bitarray(12)
+        
+        if significand is not None and Decimal(significand) == 0:
+            exponent = 0
 
         exp_representation = self.__get_exponent_representation(exponent)
         last_12_bits = exp_representation[-12:]     # Get last 12 bits
@@ -109,7 +121,7 @@ class DecimalFloatingPoint:
     """
     def __get_coefficient_continuation_field(self, significand, exponent=None) -> list[bitarray]:
 
-        if self.is_infinity(exponent):
+        if self.is_infinity(exponent) or Decimal(self.significand) == 0:
             return [ bitarray(10) for _ in range(11) ]
 
         significand_str = str(significand[1:]).zfill(33)  # Pad zeroes to the left until 33 digits
