@@ -64,22 +64,6 @@ class TestDFP(unittest.TestCase):
 
         self.assertEqual(expected, actual,
                     f'Expected is { expected }, returns { actual }')
-        
-    # def test_NearlyZeroPositive(self):
-    #     _input = '1'
-    #     expected = bitarray('0010 0010 0000 1000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000')
-    #     actual = DecimalFloatingPoint(_input, -6200, RoundingMethod.ROUND_TNE).decimal_value
-
-    #     self.assertEqual(expected, actual,
-    #                 f'Expected is { expected }, returns { actual }')
-        
-    # def test_NearlyZeroNegative(self):
-    #     _input = '-1'
-    #     expected = bitarray('1010 0010 0000 1000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000')
-    #     actual = DecimalFloatingPoint(_input, -6200, RoundingMethod.ROUND_TNE).decimal_value
-
-    #     self.assertEqual(expected, actual,
-    #                 f'Expected is { expected }, returns { actual }')
 
     def test_NormalPositiveWithDecimal_RoundTNE(self):
         _input = '1112345678901234567890123456789012.5'
