@@ -44,7 +44,7 @@ In addition, listed below are the test cases for the project:
    * Input: 1 x10 6112 (Round-TNE)
    * Expected Output: 0b0 01000 100000100000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 (binary)
 			              0x2208 0000 0000 0000 0000 0000 0000 0000  (hex)
-   * Actual Output:![image](https://github.com/dhannn/decimal128-converter/assets/135326621/a9aa9142-5c62-4009-b42e-f2d6e5e226e7)
+   * Actual Output:![image](https://github.com/dhannn/decimal128-converter/assets/135326621/956183b8-a271-4a2d-94e6-dff9a2d219c5)
 
 7. Round-down
    * Input: 1112345678901234567890123456789012.5 x10 -70 (Round Down)
