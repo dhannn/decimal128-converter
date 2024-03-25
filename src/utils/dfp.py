@@ -176,10 +176,22 @@ class DecimalFloatingPoint:
 class NaNDecimalFloatingPoint(DecimalFloatingPoint):
     def __init__(self):
         self.__sign = 0  # dont care
-        self.__combination_field = '11111'
-        self.__exponent_continuation_field = '0000_0100_0000_0101' # dont care
+        self.__combination_field = bitarray('11111')
+        self.__exponent_continuation_field = bitarray('0000_0100_0000_0101') # dont care
 
         bit_array = bitarray('0010000000')
         coefficient_continuation_field = [bit_array.copy() for _ in range(10)]
         coefficient_continuation_field = tuple(coefficient_continuation_field)
         self.__coefficient_continuation_field = coefficient_continuation_field
+
+        tmp = ''.join([x.to01() for x in self.__coefficient_continuation_field])
+        self.decimal_value = bitarray(f'{self.__sign}{self.__combination_field.to01()}{self.__exponent_continuation_field.to01()}{tmp}')
+
+    def __str__(self) -> str:
+        formatted = ' '.join([x.to01() for x in self.__coefficient_continuation_field])
+        return f'0b{self.decimal_value[0]} {self.decimal_value[1:6].to01()} {self.decimal_value[6:18].to01()} { formatted }'
+
+    def to_hex(self) -> str:
+        hex_string = [ch + ' ' if i % 4 == 3 else ch for i, ch in enumerate(self.decimal_value.tobytes().hex())]
+        return f'0x{"".join(hex_string)}'
+    

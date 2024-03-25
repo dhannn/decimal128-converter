@@ -39,7 +39,14 @@ class Model:
         self.roundingOption = roundingOption
 
     def convert_to_decimal(self) -> DecimalFloatingPoint:
-        return DecimalFloatingPoint(self.significand, self.exponent, self.roundingOption)
+        try:
+            float(self.significand)
+            float(self.exponent)
+            
+            return DecimalFloatingPoint(self.significand, self.exponent, self.roundingOption)
+        except ValueError:
+            return NaNDecimalFloatingPoint()
+        
     
     def save_to_text_file(self) -> None:
         dfp: DecimalFloatingPoint
