@@ -41,7 +41,7 @@ def normalize_significand(significand: str, exponent: str, rounding_method, num_
         _significand = significant_digits 
     else:
         _significand = ''.join(digits)
-        _significand =_significand.zfill(num_sigfigs)
+        _significand = _significand.zfill(num_sigfigs)
     
     if decimal_index != -1:
         _exponent -= (length - decimal_index)
@@ -52,26 +52,12 @@ def round_off(number: str, num_sigfigs, rounding_method: RoundingMethod, sign=0)
     _number = number[:num_sigfigs] + '.' + number[num_sigfigs:num_sigfigs + 2]
     _sign = '-' if sign == 1 else '+'
     
-    dec = Decimal(_sign + _number)
+    dec = Decimal(_sign + _number) 
+    print(str(dec.to_integral_exact(ROUND_FLOOR)).lstrip('+').lstrip('-'))
     if rounding_method == RoundingMethod.ROUND_UP:
-        # print(str('math.ceil(Decimal(_sign + _number))').lstrip('+').lstrip('-'))
-        return str(math.ceil(dec.to_integral_exact(ROUND_CEILING))).lstrip('+').lstrip('-'), len(number) - len(number[num_sigfigs:])
+        return str(dec.to_integral_exact(ROUND_CEILING)).lstrip('+').lstrip('-'), len(number) - len(number[num_sigfigs:])
     elif rounding_method == RoundingMethod.ROUND_DOWN:
-        return str(math.floor(dec.to_integral_exact(ROUND_FLOOR))).lstrip('+').lstrip('-'), len(number) - len(number[num_sigfigs:])
+        print(str(dec.to_integral_exact(ROUND_CEILING)).lstrip('+').lstrip('-'))
+        return str(dec.to_integral_exact(ROUND_FLOOR)).lstrip('+').lstrip('-'), len(number) - len(number[num_sigfigs:])
     elif rounding_method == RoundingMethod.ROUND_TNE:
-        lower_digits = number[num_sigfigs:].rstrip('0')
-
-        place_value = (10 ** (len(lower_digits) - 1))
-        midpoint = place_value * 5
-        
-        print(_sign + number[:num_sigfigs])
-        significant_digits = Decimal(_sign + number[:num_sigfigs])
-        if int(lower_digits) > midpoint:
-            significant_digits += 1
-        elif int(lower_digits) < midpoint:
-            _number = _number
-        else:
-            last_significant_digit = Decimal(number[num_sigfigs - 1])
-            significant_digits += 1 if last_significant_digit % 2 == 1 else 0
-
         return str(dec.to_integral_exact(ROUND_HALF_EVEN)).lstrip('+').lstrip('-'), len(number) - len(number[num_sigfigs:])

@@ -10,7 +10,7 @@ class TestUtils(unittest.TestCase):
 
     def __test(self, significand, expected_sign, expected_significand, expected_exponent):
         actual_sign, actual_significand, actual_exponent = normalize_significand(
-            significand, self.EXP, '', self.SIGFIGS
+            significand, self.EXP, RoundingMethod.ROUND_TNE, self.SIGFIGS
         )
 
         self.assertEquals(
@@ -52,10 +52,10 @@ class TestUtils(unittest.TestCase):
         self.__test('0.12345', 0, '12345', '-5')
     
     def test__beyondSignificantDigits_DecimalWithinMostSignificant(self):
-        self.__test('123.4567', 0, '12345', '-2')
+        self.__test('123.4567', 0, '12346', '-2')
 
     def test__beyondSignificantDigits_DecimalBeyondMostSignificant(self):
-        self.__test('-1234567.89', 1, '12345', '2')
+        self.__test('-1234567.89', 1, '12346', '2')
 
     def test__beyondSignificantDigits_Positive_WithDecimal(self):
         pass
