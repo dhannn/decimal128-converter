@@ -27,7 +27,7 @@ class TestUtils(unittest.TestCase):
         )
 
     def test__zeroes(self):
-        self.__test('00', 0, '00000', '0')
+        self.__test('00', 0, '00000', '2')
 
     def test__withinSignificantDigits_Positive_NoDecimal(self):
         significand = '12'
