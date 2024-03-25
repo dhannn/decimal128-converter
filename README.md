@@ -12,9 +12,9 @@ In addition, listed below are the test cases for the project:
 
 1. Negative Infinity
    Input: -1 x10 -6177 (Round-TNE)
-   &nbsp; Expected Output: 0b1 11110 000000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 (binary)
+   &nbsp;&nbsp;&nbsp;&nbsp; Expected Output: 0b1 11110 000000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 (binary)
                     0xf800 0000 0000 0000 0000 0000 0000 0000 (hex)
-   &nbsp; Actual Output:![image](https://github.com/dhannn/decimal128-converter/assets/135326621/fcc2fbfd-a1d2-4435-8113-3e79fa0467f1)
+   &nbsp;&nbsp;&nbsp;&nbsp; Actual Output:![image](https://github.com/dhannn/decimal128-converter/assets/135326621/fcc2fbfd-a1d2-4435-8113-3e79fa0467f1)
           
 2. Negative Zero
    Input: -0 x10 6112 (Round-TNE)
