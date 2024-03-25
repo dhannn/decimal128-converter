@@ -41,7 +41,7 @@ In addition, listed below are the test cases for the project:
    * Actual Output:![image](https://github.com/dhannn/decimal128-converter/assets/135326621/5244e3f7-b94a-4e33-93ed-2192678beedd)
 
 6. Positive Zero
-   * Input: 1 x10 6112 (Round-TNE)
+   * Input: 0 x10 6112 (Round-TNE)
    * Expected Output: 0b0 01000 100000100000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 0000000000 (binary)
 			              0x2208 0000 0000 0000 0000 0000 0000 0000  (hex)
    * Actual Output:![image](https://github.com/dhannn/decimal128-converter/assets/135326621/956183b8-a271-4a2d-94e6-dff9a2d219c5)
