@@ -1,14 +1,10 @@
 from bitarray import bitarray
-from enum import Enum
+from src.utils.RoundingMethod import RoundingMethod
 from src.utils.bcd import BCD
 from src.utils.dpd import DPD
+import src.utils.utils as dfp_utils
 from decimal import Decimal
 
-
-class RoundingMethod(Enum):
-    ROUND_UP = 0
-    ROUND_DOWN = 1
-    ROUND_TNE = 3
 
 class DecimalFloatingPoint:
     
@@ -55,80 +51,13 @@ class DecimalFloatingPoint:
             self.decimal_value.extend('0' * 120)   
 
         else:
-            def normalize_significand(significand: str, exponent):
-                # Remove trailing zeroes
-                for i in range(len(significand)):
-                    index = len(significand) - i - 1
-                    digit = significand[index]
-
-                    if digit != '0':
-                        break
-
-                    if digit.isnumeric():
-                        exponent += 1
-
-                # Remove padded zeroes
-                if not(significand[0] == '-' or significand[0] == '+'):         # If significand has no sign
-                    significand = significand.lstrip('0')
-                else:                                                           # If first char is a sign
-                    significand = significand[0] + significand[1:].lstrip('0')
-
-                # If significand contains a decimal point 
-
-                index_decimal_point = significand.find(".")     # Store index of decimal point
-                
-                digits = [ch for ch in significand if ch.isdigit()]
-                length = len(digits)
-                normalized_str = ''
-                if length > 34:
-                    significand = ''.join(digits[:34])
-                    lower_digits = ''.join(digits[34:])
-
-                    significand = round_off(significand, lower_digits, rounding_method)
-                    normalized_str = significand + '.' + lower_digits
-                else:   
-                    significand = ''.join(digits[:length]) # Move decimal point to the rightmost part
-                    normalized_str = significand + '.'     # Appends decimal point to end 
-
-                
-                significand = significand.zfill(34)
-                new_index_decimal_point = normalized_str.find(".")  # Find new position of decimal point
-
-                if index_decimal_point != -1:
-                    exponent = int(exponent)
-                    exponent += (index_decimal_point - new_index_decimal_point)
-
-                return significand, exponent
-
-            # assume significand is a string where integer part is already 34 digits and decimal point is appropriately set
-            def round_off(significand, lower_digits, rounding_method) -> str:
-                significand_dec = int(significand)
-
-                place_value = (10 ** (len(lower_digits) - 1))
-                midpoint = place_value * 5
-
-                if rounding_method == RoundingMethod.ROUND_UP:
-                    return str(significand_dec + 1)
-                elif rounding_method == RoundingMethod.ROUND_DOWN:
-                    return significand
-                elif rounding_method == RoundingMethod.ROUND_TNE:
-                    if int(lower_digits) == midpoint:          
-                        if significand_dec % 2 == 0:    
-                            return significand
-                        else:
-                            return str(significand_dec + 1)
-                    elif int(lower_digits) > midpoint:                               
-                        return str(significand_dec + 1)
-                    elif int(lower_digits) < midpoint:   
-                        return significand
-
             if significand[0] == '-':
                 significand = significand[1:]
                 self.__sign = 1
             else:
                 self.__sign = 0
 
-            significand, exponent = normalize_significand(significand, exponent)
+            sign, significand, exponent = dfp_utils.normalize_significand(significand, exponent, rounding_method)
             
             self.significand = significand
             self.exponent = int(exponent)

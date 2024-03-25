@@ -1,6 +1,5 @@
 from decimal import Decimal, ROUND_DOWN, ROUND_UP, ROUND_CEILING, ROUND_FLOOR, ROUND_HALF_EVEN
-from src.utils.dfp import RoundingMethod
-import math
+from src.utils.RoundingMethod import RoundingMethod
 
 def normalize_significand(significand: str, exponent: str, rounding_method, num_sigfigs=34):
     
@@ -31,20 +30,23 @@ def normalize_significand(significand: str, exponent: str, rounding_method, num_
     # Extract all digits
     digits = [ ch for ch in _significand if ch.isdigit() ]
     length = len(digits)
+
+    if decimal_index == -1:
+        decimal_index = length
     
     # If digits are beyond 34, round off
     if len(digits) > num_sigfigs:
-        significant_digits, decimal_point_offset = round_off(
+        significant_digits, _ = round_off(
             ''.join(digits), num_sigfigs,
             rounding_method)
         
-        _significand = significant_digits 
+        _significand = significant_digits
+        _exponent += (decimal_index - num_sigfigs)
     else:
         _significand = ''.join(digits)
         _significand = _significand.zfill(num_sigfigs)
-    
-    if decimal_index != -1:
         _exponent -= (length - decimal_index)
+    
     
     return sign, _significand, str(_exponent)
 

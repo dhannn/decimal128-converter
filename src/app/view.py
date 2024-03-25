@@ -3,7 +3,7 @@ from PyQt6.QtWidgets import QWidget
 from PyQt6.QtWidgets import QLabel,QWidget, QGridLayout, QLineEdit,\
     QHBoxLayout, QComboBox, QPushButton, QPlainTextEdit
 
-from src.utils.dfp import RoundingMethod
+from src.utils.RoundingMethod import RoundingMethod
 
 class View(QWidget):
 
